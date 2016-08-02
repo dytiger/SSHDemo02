@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>保存诗歌</title>
+    <style>
+        form > div{
+            line-height:2em;
+        }
+    </style>
+</head>
+<body>
+<form action="save.do" method="post">
+    <div>
+        <label>标题</label><input type="text" name="title" />
+    </div>
+    <div>
+        <label>作者</label><input type="text" name="author" />
+    </div>
+    <div>
+        <label>朝代</label><input type="text" name="dynasty" list="dynasty-list" />
+    </div>
+    <div>
+        <textarea name="poemText" cols="80" rows="10"></textarea>
+    </div>
+    <div>
+        <button>保存</button>
+    </div>
+    <datalist id="dynasty-list">
+        <option>先秦</option>
+        <option>汉</option>
+        <option>魏晋</option>
+        <option>南北朝</option>
+        <option>隋朝</option>
+        <option>唐朝</option>
+        <option>北宋</option>
+        <option>南宋</option>
+        <option>元朝</option>
+        <option>明朝</option>
+        <option>清朝</option>
+        <option>当代</option>
+        <option>现代</option>
+    </datalist>
+</form>
+</body>
+</html>
