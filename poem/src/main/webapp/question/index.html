@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>诗词大会</title>
+    <style>
+        #question{
+            height:20em;
+            width: 40%;
+            margin: 0 30%;
+        }
+
+        #btn-div{
+            width: 40%;
+            margin: 0 30%;
+        }
+
+        #answer-input{
+            font-size:3em;
+            height:1.5em;
+            width: 10em;
+        }
+
+        #question>div{
+            display: inline;
+            float: left;
+            border:1px solid black;
+            font-size: 8em;
+            width: 33%;
+            margin: 0.02%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="question"></div>
+    <div id="btn-div">
+        <input type="text" id="answer-input" />
+        <button type="button" id="ok-btn">提交</button>
+        <button type="button" id="break-btn">退格</button>
+        <button type="button" id="clean-btn">清除</button>
+        <button type="button" id="next-btn">换一题</button>
+    </div>
+    <script src="../js/jquery-3.1.0.js"></script>
+    <script>
+        var questionVo;
+        $(function(){
+            getQuestion();
+            $('#next-btn').on('click',getQuestion);
+            $('#question').on('click','div',function(){
+                var word = this.innerText;
+                var inputVal = $("#answer-input").val();
+                inputVal = inputVal + word;
+                $("#answer-input").val(inputVal);
+            });
+            $('#break-btn').on('click',function(){
+                var inputVal = $("#answer-input").val();
+                inputVal = inputVal.substring(0,inputVal.length-1);
+                $("#answer-input").val(inputVal);
+            });
+            $('#clean-btn').on('click',function(){
+                $("#answer-input").val("");
+            });
+            $('#ok-btn').on('click',function(){
+                if($("#answer-input").val()===questionVo.answer){
+                    alert("OK");
+                }else{
+                    alert("error");
+                }
+            });
+        });
+
+        function getQuestion(){
+            $("#question").empty();
+            $("#answer-input").val("");
+            $.ajax({
+                url:'getQuestion.do',
+                type:'GET',
+                contentType: 'application/json'
+            }).then(function(vo){
+                questionVo = vo;
+                var charArr = vo.question;
+                var questionDiv = $("#question");
+                for(var i = 0;i<charArr.length;i++){
+                    questionDiv.append("<div>"+charArr[i]+"</div>");
+                };
+            },function(){
+                alert(222);
+//                $('#question').innerHTML = "ERROR";
+            });
+        }
+    </script>
+</body>
+</html>

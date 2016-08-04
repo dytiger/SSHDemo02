@@ -8,6 +8,7 @@
 		http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="org.forten" />
     <context:property-placeholder location="classpath*:/system/*.properties" />
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">

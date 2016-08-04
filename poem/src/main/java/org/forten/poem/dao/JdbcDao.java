@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ import java.util.Map;
 public class JdbcDao implements InitializingBean {
     private DataSource dataSource;
     private NamedParameterJdbcTemplate jdbcTemplate;
+
+    private static final Map<String,Object> EMPTY_PARAMS = new HashMap<String, Object>();
 
     /**
      * 对数据进行添加、删除、更新操作
@@ -41,8 +44,12 @@ public class JdbcDao implements InitializingBean {
     public <T> List<T> findBy(String sql, Map<String, Object> params, RowMapper<T> mapper) {
         return jdbcTemplate.query(sql, params, mapper);
     }
-    public <T> List<T> findBy(String sql, Map<String, Object> params) {
-        return (List<T>)jdbcTemplate.queryForList(sql, params);
+
+    public <T> T findSingleObjectBy(String sql, Map<String, Object> params,Class<T> c) {
+        return jdbcTemplate.queryForObject(sql, params,c);
+    }
+    public <T> T findSingleObjectBy(String sql, Class<T> c) {
+        return jdbcTemplate.queryForObject(sql,EMPTY_PARAMS,c);
     }
 
     /**
