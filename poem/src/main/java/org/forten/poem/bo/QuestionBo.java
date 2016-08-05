@@ -1,6 +1,7 @@
 package org.forten.poem.bo;
 
 import org.forten.poem.dao.JdbcDao;
+import org.forten.poem.vo.PoemForList;
 import org.forten.poem.vo.QuestionForShow;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,9 @@ public class QuestionBo {
         String sql = "SELECT count(id) FROM poem";
         long count = jdbcDao.findSingleObjectBy(sql,Long.class);
 
-        // 随机得到一首诗词
+        // 随机得到一首诗词，并组装QuestionForShow类型的对象
+        // 这个对象是不完整的，只添加了id和answer两个属性的值
+        // question的数据要下一步生成
         Random random = new Random();
         int i = random.nextInt((int)count);
         sql = "SELECT id,poem_text FROM poem LIMIT :n,1";
@@ -38,14 +41,14 @@ public class QuestionBo {
                 QuestionForShow show = new QuestionForShow();
                 show.setId(rs.getInt("id"));
                 String poem = rs.getString("poem_text");
+                // 由诗歌的每一句组成的一个String数组
                 String[] stats = poem.split("\\s+");
                 show.setAnswer(stats[random.nextInt(stats.length)]);
                 return show;
             }
         });
 
-        // 此时Question中有了除问题属性以外的所有数据
-        // 以下进行问题属性的随机生成
+        // 生成question
         String answerText = question.getAnswer();
 
         for(int j = 0;j<4;j++){
@@ -53,15 +56,15 @@ public class QuestionBo {
         }
 
         StringBuilder sb = new StringBuilder(answerText);
-        List<String> resultList = new ArrayList<>();
+        List<String> questionWordList = new ArrayList<>();
         while (sb.length()>0){
             int index = random.nextInt(sb.length());
             char t = sb.charAt(index);
             sb.deleteCharAt(index);
-            resultList.add(""+t);
+            questionWordList.add(""+t);
         }
 
-        question.setQuestion(resultList);
+        question.setQuestion(questionWordList);
 
         return question;
     }

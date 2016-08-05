@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <title>诗词大会</title>
     <style>
-        #question{
-            height:20em;
-            width: 40%;
+        .container{
             margin: 0 30%;
         }
 
-        #btn-div{
-            width: 40%;
-            margin: 0 30%;
+        .container>div{
+            margin: 2em 0;
+        }
+
+        #question{
+            min-height:28em;
         }
 
         #answer-input{
@@ -27,12 +28,19 @@
             border:1px solid black;
             font-size: 8em;
             width: 33%;
-            margin: 0.02%;
+            /*margin: 0.02%;*/
             text-align: center;
+        }
+
+        #answer{
+            margin: 0 30%;
+            width: 40%;
+            font-size:3em;
         }
     </style>
 </head>
 <body>
+<div class="container">
     <div id="question"></div>
     <div id="btn-div">
         <input type="text" id="answer-input" />
@@ -40,7 +48,10 @@
         <button type="button" id="break-btn">退格</button>
         <button type="button" id="clean-btn">清除</button>
         <button type="button" id="next-btn">换一题</button>
+        <button type="button" id="answer-btn">提示</button>
     </div>
+    <div id="answer"></div>
+</div>
     <script src="../js/jquery-3.1.0.js"></script>
     <script>
         var questionVo;
@@ -68,7 +79,25 @@
                     alert("error");
                 }
             });
+            $('#answer-btn').on('click',getAnswer);
+            $('#answer-btn').add('#ok-btn').add('#next-btn').on('click',function(){
+                var answerDiv = $("#answer");
+                answerDiv.empty();
+            });
         });
+
+        function getAnswer(){
+            var answerDiv = $("#answer");
+            $.ajax({
+                url:'getAnswer.do?id='+questionVo.id,
+                type:'GET',
+                contentType:'application/json'
+            }).then(function(answer){
+                answerDiv.append(answer.poemText);
+            },function(){
+               alert("ERROR");
+            });
+        }
 
         function getQuestion(){
             $("#question").empty();

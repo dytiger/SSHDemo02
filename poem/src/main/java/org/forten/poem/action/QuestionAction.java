@@ -1,6 +1,8 @@
 package org.forten.poem.action;
 
+import org.forten.poem.bo.PoemBo;
 import org.forten.poem.bo.QuestionBo;
+import org.forten.poem.vo.PoemForList;
 import org.forten.poem.vo.QuestionForShow;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,10 +18,17 @@ import javax.annotation.Resource;
 public class QuestionAction {
     @Resource
     private QuestionBo questionBo;
+    @Resource
+    private PoemBo poemBo;
 
     @RequestMapping("/question/getQuestion")
     public @ResponseBody QuestionForShow getQuestion(){
         QuestionForShow vo = questionBo.getQuestion();
         return vo;
+    }
+
+    @RequestMapping("/question/getAnswer")
+    public @ResponseBody PoemForList getAnswer(int id){
+        return poemBo.queryById(id);
     }
 }
